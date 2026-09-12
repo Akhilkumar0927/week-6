@@ -1,0 +1,49 @@
+class Solution {
+    public int strStr(String haystack, String needle) {
+        int n = haystack.length(), m = needle.length();
+        if (m == 0) {
+            return 0;
+        }
+        
+        // Build KMP failure function (longest proper prefix-suffix) for needle
+        int[] fail = new int[m];
+        int k = 0;
+        for (int i = 1; i < m; i++) {
+            char c = needle.charAt(i);
+            while (k > 0 && needle.charAt(k) != c) {
+                k = fail[k - 1];
+            }
+            if (needle.charAt(k) == c) {
+                k++;
+            }
+            fail[i] = k;
+        }
+        
+        // Search needle in haystack using the failure function
+        k = 0;
+        for (int i = 0; i < n; i++) {
+            char c = haystack.charAt(i);
+            while (k > 0 && needle.charAt(k) != c) {
+                k = fail[k - 1];
+            }
+            if (needle.charAt(k) == c) {
+                k++;
+            }
+            if (k == m) {
+                return i - m + 1;
+            }
+        }
+        
+        return -1;
+    }
+}
+output:
+nput
+haystack =
+"sadbutsad"
+needle =
+"sad"
+Output
+0
+Expected
+0
